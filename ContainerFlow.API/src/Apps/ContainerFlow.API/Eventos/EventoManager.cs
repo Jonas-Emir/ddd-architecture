@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using ContainerFlow.API.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,13 +35,8 @@ public class EventoManager : IEventoManager
     public async Task<IEnumerable<Mensagem<T>>> RecuperarNaoLidasAsync<T>(string tipoEvento, string tipoLeitor)
     {
         var mensagens = await context.Outbox
-            .FromSqlRaw(@"
-                SELECT o.* 
-                FROM Outbox o 
-                    LEFT JOIN Inbox i on i.OutboxMessageId = o.Id 
-                        AND i.TipoLeitor = {0}
-                WHERE i.Id IS NULL AND o.TipoEvento = {1}", tipoLeitor, tipoEvento
-            )
+            .Where(o => o.TipoEvento == tipoEvento &&
+                        !context.Inbox.Any(i => i.OutboxMessageId == o.Id && i.TipoLeitor == tipoLeitor))
             .ToListAsync();
 
         var saida = mensagens

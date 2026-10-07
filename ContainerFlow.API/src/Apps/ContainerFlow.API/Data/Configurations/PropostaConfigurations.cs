@@ -1,4 +1,4 @@
-﻿using ContainerFlow.Vendas.Propostas;
+using ContainerFlow.Vendas.Propostas;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +8,8 @@ public class PropostaConfigurations : IEntityTypeConfiguration<Proposta>
 {
     public void Configure(EntityTypeBuilder<Proposta> builder)
     {
+        builder.ToTable("Propostas", "vendas");
+        builder.HasKey(p => p.Id);
         builder.Property(p => p.ValorTotal)
             .HasColumnType("decimal(18,2)");
 
