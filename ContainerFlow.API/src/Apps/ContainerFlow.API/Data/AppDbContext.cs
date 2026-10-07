@@ -44,9 +44,10 @@ public class AppDbContext : DbContext
             .Select(@event => new OutboxMessage
             {
                 Id = Guid.NewGuid(),
+                CorrelationId = @event.EventoId,
                 TipoEvento = @event.GetType().Name,
                 InfoEvento = JsonSerializer.Serialize(@event, @event.GetType()),
-                DataCriacao = DateTime.Now,
+                DataCriacaoUtc = @event.OcorreuEmUtc,
             })
             .ToList();
 

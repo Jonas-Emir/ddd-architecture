@@ -15,6 +15,15 @@ public class InboxMessageConfigurations : IEntityTypeConfiguration<InboxMessage>
             .IsRequired()
             .HasMaxLength(150);
 
+        builder.Property(i => i.DataProcessamentoUtc)
+            .IsRequired();
+
+        builder.Property(i => i.Sucesso)
+            .IsRequired();
+
+        builder.Property(i => i.Erro)
+            .HasMaxLength(1000);
+
         builder.HasIndex(i => new { i.OutboxMessageId, i.TipoLeitor })
             .IsUnique();
 

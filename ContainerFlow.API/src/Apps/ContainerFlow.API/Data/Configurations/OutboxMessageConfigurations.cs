@@ -11,11 +11,20 @@ public class OutboxMessageConfigurations : IEntityTypeConfiguration<OutboxMessag
         builder.ToTable("OutboxMessages", "eventos");
         builder.HasKey(o => o.Id);
 
+        builder.Property(o => o.CorrelationId)
+            .IsRequired();
+
         builder.Property(o => o.TipoEvento)
             .IsRequired()
             .HasMaxLength(250);
 
         builder.Property(o => o.InfoEvento)
             .IsRequired();
+
+        builder.Property(o => o.DataCriacaoUtc)
+            .IsRequired();
+
+        builder.Property(o => o.UltimoErro)
+            .HasMaxLength(1000);
     }
 }

@@ -1,3 +1,4 @@
+using ContainerFlow.Contracts.Eventos;
 using ContainerFlow.DDD;
 
 namespace ContainerFlow.Vendas.Propostas;
@@ -65,7 +66,7 @@ public class Proposta : AggregateRoot<Guid>
     {
         if (Situacao != SituacaoProposta.Enviada) return false;
         Situacao = SituacaoProposta.Aceita;
-        AdicionarEvento(new PropostaAprovada(Id, ValorTotal.Valor));
+        AdicionarEvento(new PropostaAprovadaEvent(Id, ValorTotal?.Valor ?? 0, ClienteId, SolicitacaoId));
         return true;
     }
 }

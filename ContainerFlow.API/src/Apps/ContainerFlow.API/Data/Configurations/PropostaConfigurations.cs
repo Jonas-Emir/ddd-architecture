@@ -10,7 +10,11 @@ public class PropostaConfigurations : IEntityTypeConfiguration<Proposta>
     {
         builder.ToTable("Propostas", "vendas");
         builder.HasKey(p => p.Id);
+
         builder.Property(p => p.ValorTotal)
+            .HasConversion(
+                v => v != null ? v.Valor : 0m,
+                v => new ValorMonetario(v))
             .HasColumnType("decimal(18,2)");
 
         builder.OwnsOne(p => p.Situacao, status =>
