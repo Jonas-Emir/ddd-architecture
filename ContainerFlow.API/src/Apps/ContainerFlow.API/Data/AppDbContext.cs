@@ -1,4 +1,5 @@
 using ContainerFlow.Api.Eventos;
+using ContainerFlow.Contracts;
 using ContainerFlow.DDD;
 using ContainerFlow.Financeiro.Faturamento;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using System.Text.Json;
 
 namespace ContainerFlow.API.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IUnitOfWork
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -25,6 +26,11 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    }
+
+    public Task<int> CommitAsync(CancellationToken cancellationToken = default)
+    {
+        return SaveChangesAsync(cancellationToken);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

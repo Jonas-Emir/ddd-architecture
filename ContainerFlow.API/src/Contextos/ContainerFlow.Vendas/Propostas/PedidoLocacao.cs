@@ -20,12 +20,18 @@ public record StatusPedido(string Status)
         };
     }
 }
+
 /// <summary>
 /// Pedido formal realizado por um cliente interessado na locação de um contêiner. A solicitação pode incluir informações sobre finalidade, localização, quantidade e período desejado. <see href="https://wiki.ContainerFlow.com/glossario"/>
 /// </summary>
 public class PedidoLocacao : AggregateRoot<Guid>
 {
-    public PedidoLocacao() { }
+    public PedidoLocacao()
+    {
+        Id = Guid.NewGuid();
+        Descricao = string.Empty;
+        Finalidade = string.Empty;
+    }
 
     public Guid ClienteId { get; set; }
     public string Descricao { get; set; }
@@ -36,12 +42,13 @@ public class PedidoLocacao : AggregateRoot<Guid>
     public int DisponibilidadePrevia { get; set; }
     public int DuracaoPrevistaLocacao { get; set; }
     public Guid EnderecoId { get; set; }
-    public Endereco Localizacao { get; set; }
+    public Endereco? Localizacao { get; set; }
 
-    public ICollection<Proposta> Propostas { get; } = [];
+    public ICollection<Proposta> Propostas { get; } = new List<Proposta>();
 
     public Proposta AddProposta(Proposta proposta)
     {
+        proposta.SolicitacaoId = Id;
         Propostas.Add(proposta);
         return proposta;
     }
@@ -51,4 +58,13 @@ public class PedidoLocacao : AggregateRoot<Guid>
         Propostas.Remove(proposta);
     }
 
+    public void Cancelar()
+    {
+        Status = StatusPedido.Cancelada;
+    }
+
+    public void Inativar()
+    {
+        Status = StatusPedido.Inativa;
+    }
 }

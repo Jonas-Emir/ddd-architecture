@@ -25,12 +25,32 @@ public record StatusLocacao(string Status)
 
 public class Locacao : AggregateRoot<Guid>
 {
-    public Locacao() { }
+    public Locacao()
+    {
+        Id = Guid.NewGuid();
+        DataInicio = DateTime.UtcNow;
+    }
+
     public Guid PropostaId { get; set; }
     public Guid ClienteId { get; set; }
-    public Proposta Proposta { get; set; }
+    public Proposta? Proposta { get; set; }
     public DateTime DataInicio { get; set; }
     public DateTime DataPrevistaEntrega { get; set; }
     public DateTime DataTermino { get; set; }
     public StatusLocacao Status { get; set; } = StatusLocacao.Contrato;
+
+    public void AvancarParaFaturamento()
+    {
+        Status = StatusLocacao.Faturamento;
+    }
+
+    public void Finalizar()
+    {
+        Status = StatusLocacao.Finalizada;
+    }
+
+    public void Cancelar()
+    {
+        Status = StatusLocacao.Cancelada;
+    }
 }

@@ -5,13 +5,18 @@ namespace ContainerFlow.Financeiro.Faturamento;
 
 public class EmissorDeFaturas
 {
-    private readonly IRepository<Fatura> _repoFatura;
+    private readonly IFaturaRepository _repoFatura;
     private readonly IEventoManager _eventoManager;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public EmissorDeFaturas(IRepository<Fatura> repoFatura, IEventoManager eventoManager)
+    public EmissorDeFaturas(
+        IFaturaRepository repoFatura,
+        IEventoManager eventoManager,
+        IUnitOfWork unitOfWork)
     {
         _repoFatura = repoFatura;
         _eventoManager = eventoManager;
+        _unitOfWork = unitOfWork;
     }
 
     public Task ExecutarAsync() => ExecutarAsync(CancellationToken.None);
@@ -32,7 +37,8 @@ public class EmissorDeFaturas
                     Total = mensagem.Corpo.ValorProposta
                 };
 
-                await _repoFatura.AddAsync(fatura, ct);
+                await _repoFatura.AdicionarAsync(fatura, ct);
+                await _unitOfWork.CommitAsync(ct);
             },
             cancellationToken);
 
@@ -51,7 +57,8 @@ public class EmissorDeFaturas
                     Total = mensagem.Corpo.ValorProposta
                 };
 
-                await _repoFatura.AddAsync(fatura, ct);
+                await _repoFatura.AdicionarAsync(fatura, ct);
+                await _unitOfWork.CommitAsync(ct);
             },
             cancellationToken);
     }

@@ -38,7 +38,13 @@ public record ValorMonetario
 
 public class Proposta : AggregateRoot<Guid>
 {
-    public Proposta() { }
+    public Proposta()
+    {
+        Id = Guid.NewGuid();
+        NomeArquivo = string.Empty;
+        ValorTotal = new ValorMonetario(0);
+        DataCriacao = DateTime.UtcNow;
+    }
 
     public SituacaoProposta Situacao { get; set; } = SituacaoProposta.Enviada;
     public ValorMonetario ValorTotal { get; set; }
@@ -47,13 +53,16 @@ public class Proposta : AggregateRoot<Guid>
     public string NomeArquivo { get; set; }
     public Guid ClienteId { get; set; }
     public Guid SolicitacaoId { get; set; }
-    public PedidoLocacao Solicitacao { get; set; }
-    public ICollection<Comentario> Comentarios { get; } = [];
+    public PedidoLocacao? Solicitacao { get; set; }
+    public ICollection<Comentario> Comentarios { get; } = new List<Comentario>();
 
     public Comentario AddComentario(Comentario comentario)
     {
         if (Situacao == SituacaoProposta.Enviada)
+        {
+            comentario.PropostaId = Id;
             Comentarios.Add(comentario);
+        }
         return comentario;
     }
 
@@ -68,5 +77,15 @@ public class Proposta : AggregateRoot<Guid>
         Situacao = SituacaoProposta.Aceita;
         AdicionarEvento(new PropostaAprovadaEvent(Id, ValorTotal?.Valor ?? 0, ClienteId, SolicitacaoId));
         return true;
+    }
+
+    public void Recusar()
+    {
+        Situacao = SituacaoProposta.Recusada;
+    }
+
+    public void Cancelar()
+    {
+        Situacao = SituacaoProposta.Cancelada;
     }
 }
