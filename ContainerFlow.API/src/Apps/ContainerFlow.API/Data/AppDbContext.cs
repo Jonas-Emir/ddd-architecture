@@ -1,4 +1,4 @@
-﻿using ContainerFlow.Api.Eventos;
+using ContainerFlow.Api.Eventos;
 using ContainerFlow.DDD;
 using ContainerFlow.Financeiro.Faturamento;
 using Microsoft.EntityFrameworkCore;
@@ -30,12 +30,12 @@ public class AppDbContext : DbContext
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var domainEvents = ChangeTracker
-            .Entries<IAgreggateRoot>()
+            .Entries<IAggregateRoot>()
             .Select(entry => entry.Entity)
             .SelectMany(entity =>
             {
-                var events = entity.Events.ToList();
-                entity.RemoverEventos();
+                var events = entity.Eventos.ToList();
+                entity.LimparEventos();
                 return events;
             })
             .ToList();
@@ -45,7 +45,7 @@ public class AppDbContext : DbContext
             {
                 Id = Guid.NewGuid(),
                 TipoEvento = @event.GetType().Name,
-                InfoEvento = JsonSerializer.Serialize(@event),
+                InfoEvento = JsonSerializer.Serialize(@event, @event.GetType()),
                 DataCriacao = DateTime.Now,
             })
             .ToList();

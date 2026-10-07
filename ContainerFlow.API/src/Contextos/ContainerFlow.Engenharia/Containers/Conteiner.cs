@@ -1,4 +1,6 @@
-﻿namespace ContainerFlow.Engenharia.Containers;
+using ContainerFlow.DDD;
+
+namespace ContainerFlow.Engenharia.Containers;
 
 /// <summary>
 ///         ON - O contêiner está ligado e funcionando normalmente.
@@ -18,9 +20,8 @@ public enum StatusConteiner
     CHARGING
 }
 
-public class Conteiner
+public class Conteiner : AggregateRoot<Guid>
 {
-    public Guid Id { get; set; }
     public StatusConteiner Status { get; set; } = StatusConteiner.OFF;
     public string? Observacoes { get; set; }
     public Guid LocacaoId { get; set; }

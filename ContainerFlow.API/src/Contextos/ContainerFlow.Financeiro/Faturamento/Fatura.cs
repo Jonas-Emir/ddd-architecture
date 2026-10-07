@@ -1,8 +1,9 @@
-﻿namespace ContainerFlow.Financeiro.Faturamento;
+using ContainerFlow.DDD;
 
-public class Fatura
+namespace ContainerFlow.Financeiro.Faturamento;
+
+public class Fatura : AggregateRoot<Guid>
 {
-    public Guid Id { get; set; }
     public required string Numero { get; set; } 
     public DateTime DataEmissao { get; set; }
     public DateTime DataVencimento { get; set; }

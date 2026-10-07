@@ -1,4 +1,5 @@
-﻿using ContainerFlow.Vendas.Propostas;
+using ContainerFlow.DDD;
+using ContainerFlow.Vendas.Propostas;
 
 namespace ContainerFlow.Vendas.Locacoes;
 
@@ -22,10 +23,9 @@ public record StatusLocacao(string Status)
     }
 }
 
-public class Locacao
+public class Locacao : AggregateRoot<Guid>
 {
     public Locacao() { }
-    public Guid Id { get; set; }
     public Guid PropostaId { get; set; }
     public Guid ClienteId { get; set; }
     public Proposta Proposta { get; set; }

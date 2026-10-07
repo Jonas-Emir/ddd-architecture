@@ -1,8 +1,10 @@
-﻿namespace ContainerFlow.Clientes.Cadastro;
+using ContainerFlow.DDD;
 
-public class Cliente
+namespace ContainerFlow.Clientes.Cadastro;
+
+public class Cliente : AggregateRoot<Guid>
 {
-    private Cliente() { } // EF Core
+    private Cliente() { }
 
     public Cliente(string nome, Email email, string cPF)
     {
@@ -11,7 +13,6 @@ public class Cliente
         CPF = cPF;
     }
 
-    public Guid Id { get; set; }
     public string Nome { get; private set; }
     public Email Email { get; private set; }
     public string CPF { get; private set; }

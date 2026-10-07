@@ -1,4 +1,6 @@
-﻿namespace ContainerFlow.Vendas.Propostas;
+using ContainerFlow.DDD;
+
+namespace ContainerFlow.Vendas.Propostas;
 
 public record StatusPedido(string Status)
 {
@@ -21,11 +23,10 @@ public record StatusPedido(string Status)
 /// <summary>
 /// Pedido formal realizado por um cliente interessado na locação de um contêiner. A solicitação pode incluir informações sobre finalidade, localização, quantidade e período desejado. <see href="https://wiki.ContainerFlow.com/glossario"/>
 /// </summary>
-public class PedidoLocacao
+public class PedidoLocacao : AggregateRoot<Guid>
 {
     public PedidoLocacao() { }
 
-    public Guid Id { get; set; }
     public Guid ClienteId { get; set; }
     public string Descricao { get; set; }
     public int QuantidadeEstimada { get; set; }
