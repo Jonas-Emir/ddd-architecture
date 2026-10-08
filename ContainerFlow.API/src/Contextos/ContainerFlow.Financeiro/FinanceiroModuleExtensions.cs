@@ -14,6 +14,7 @@ public static class FinanceiroModuleExtensions
 
     public static IEndpointRouteBuilder MapFinanceiroModule(this IEndpointRouteBuilder endpoints)
     {
+        endpoints.MapFaturasEndpoints();
         return endpoints;
     }
 }

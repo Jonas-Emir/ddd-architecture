@@ -124,7 +124,7 @@ public static class SolicitacoesEndpoints
             var solicitacao = await repository.ObterPorIdAsync(id, cancellationToken);
             if (solicitacao is null) return Results.NotFound();
 
-            solicitacao.Status = StatusPedido.Cancelada;
+            solicitacao.Cancelar();
             await repository.AtualizarAsync(solicitacao, cancellationToken);
             await unitOfWork.CommitAsync(cancellationToken);
 

@@ -158,7 +158,7 @@ public static class PropostasEndpoints
             var proposta = await repository.ObterPorIdEPedidoAsync(propostaId, id, cancellationToken);
             if (proposta is null) return Results.NotFound();
 
-            proposta.Situacao = SituacaoProposta.Recusada;
+            proposta.Recusar();
             await repository.AtualizarAsync(proposta, cancellationToken);
             await unitOfWork.CommitAsync(cancellationToken);
 

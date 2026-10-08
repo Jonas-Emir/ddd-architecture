@@ -1,5 +1,7 @@
 using ContainerFlow.Contracts.Eventos;
+using ContainerFlow.DDD;
 using ContainerFlow.Engenharia.Containers;
+using ContainerFlow.Financeiro.Faturamento;
 using ContainerFlow.Vendas.Locacoes;
 using ContainerFlow.Vendas.Propostas;
 
@@ -99,6 +101,41 @@ public class DomainInvariantesTestes
         Assert.Equal(StatusConteiner.OFF, conteiner.Status);
         Assert.Equal(Guid.Empty, conteiner.LocacaoId);
         Assert.Contains("Liberado", conteiner.Observacoes);
+    }
+
+    [Fact]
+    public void Fatura_AoMarcarComoPaga_DeveAtualizarStatusParaPaga()
+    {
+        // Arrange
+        var fatura = new Fatura("FAT-2026-001", 1500m, Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(30));
+
+        // Act
+        fatura.MarcarComoPaga();
+
+        // Assert
+        Assert.Equal(StatusFatura.Paga, fatura.Status);
+    }
+
+    [Fact]
+    public void Fatura_AoTentarPagarFaturaCancelada_DeveLancarDomainException()
+    {
+        // Arrange
+        var fatura = new Fatura("FAT-2026-002", 1500m, Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(30));
+        fatura.Cancelar();
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => fatura.MarcarComoPaga());
+    }
+
+    [Fact]
+    public void Fatura_AoTentarCancelarFaturaPaga_DeveLancarDomainException()
+    {
+        // Arrange
+        var fatura = new Fatura("FAT-2026-003", 1500m, Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(30));
+        fatura.MarcarComoPaga();
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => fatura.Cancelar());
     }
 
     [Fact]

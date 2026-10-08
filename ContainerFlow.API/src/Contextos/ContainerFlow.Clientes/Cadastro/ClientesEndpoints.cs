@@ -225,7 +225,7 @@ public static class ClientesEndpoints
             await repository.AtualizarAsync(cliente, cancellationToken);
             await unitOfWork.CommitAsync(cancellationToken);
 
-            return Results.Ok(ClienteResponse.From(cliente));
+            return Results.NoContent();
         })
         .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status404NotFound);

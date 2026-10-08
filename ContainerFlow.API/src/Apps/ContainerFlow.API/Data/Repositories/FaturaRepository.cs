@@ -24,6 +24,13 @@ public class FaturaRepository : BaseRepository<Fatura>, IFaturaRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<Fatura>> ObterPorLocacaoAsync(Guid locacaoId, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Faturas
+            .Where(f => f.LocacaoId == locacaoId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task AdicionarAsync(Fatura fatura, CancellationToken cancellationToken = default)
     {
         await _dbContext.Faturas.AddAsync(fatura, cancellationToken);
